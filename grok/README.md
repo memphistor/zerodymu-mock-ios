@@ -42,15 +42,15 @@ Reset w Ustawieniach wraca do pustego szkicu.
 | Źródło Pages | Settings → Pages → **Deploy from a branch** → `main` → folder **`/ (root)`** |
 | Workflow Actions | Brak. Statyczny HTML, bez bundlera. |
 | Korzeń | Stara wersja (mock Composer) serwowana wprost. **Bez przekierowania.** |
-| Ten prototyp | Katalog **`sonnet/`** |
-| Jekyll | `.nojekyll` w korzeniu i w `sonnet/` |
+| Ten prototyp | Katalog **`grok/`** |
+| Jekyll | `.nojekyll` w korzeniu i w `grok/` |
 
 **Stara wersja:**  
 https://memphistor.github.io/zerodymu-mock-ios/
 
 **Ten prototyp:**  
-https://memphistor.github.io/zerodymu-mock-ios/sonnet/
+https://memphistor.github.io/zerodymu-mock-ios/grok/
 
-**Sync po zmianach w `Grok/`:** skopiuj zawartość tego folderu do `sonnet/` w repo Pages, commit + push na `main`. Pages odświeża się zwykle w 1–2 minuty.
+**Sync po zmianach w `Grok/`:** skopiuj zawartość tego folderu do `grok/` w repo Pages, commit + push na `main`. Pages odświeża się zwykle w 1–2 minuty.
 
-Ścieżki assetów są względne (`./css/...`, `./js/...`), żeby działały pod `/sonnet/`.
+Ścieżki assetów są względne (`./css/...`, `./js/...`), żeby działały pod `/grok/`.
