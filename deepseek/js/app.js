@@ -2,19 +2,26 @@
  * Punkt wejścia aplikacji.
  *
  * Boot: odczyt z localStorage → router → pierwszy render.
- * Render jest pełny (innerHTML) przy zmianie trasy lub stanu, ale
- * sceny rozgrywają się w jednym miejscu, więc łatwo je wymienić.
+ * Render jest pełny (innerHTML) przy zmianie trasy lub stanu — widoki są
+ * funkcjami czystymi, więc każdy render odtwarza ten sam obraz ze stanu.
  */
 
-import { load, ensureStarted, subscribe, rememberVisit, updateSettings } from "./store.js";
+import { load, ensureStarted, subscribe, rememberVisit, updateSettings, getState } from "./store.js";
 import { initTheme } from "./theme.js";
 import { startRouter, navigate, currentRoute, TABS } from "./router.js";
-import { $, $$, escapeHtml } from "./dom.js";
+import { $, escapeHtml } from "./dom.js";
 import { iconMarkup } from "./ui/icons.js";
 import { loadingState, errorState, retryButton } from "./ui/states.js";
 import { courseListScreen, moduleScreen } from "./views/course.js";
 import { lessonScreen } from "./views/lesson.js";
-import { quizScreen } from "./views/quiz.js";
+import {
+  quizScreen,
+  resolveQuiz,
+  answerQuestion,
+  finishQuiz,
+  resetSession,
+} from "./views/quiz.js";
+import { markLessonDone, markLessonOpen, isLessonDone } from "./logic/progress.js";
 import { panelScreen, addHabit, removeHabit } from "./views/panel.js";
 import { settingsScreen, confirmReset } from "./views/settings.js";
 import { statesScreen, setStatesDemo, triggerDemoError } from "./views/states-demo.js";
@@ -30,7 +37,12 @@ let toast = null;
 
 /* --- Górny pasek --- */
 
-function brandBar(title, aside = "") {
+const BARS = {
+  lists: { kurs: "ZeroDymu", panel: "Panel", ustawienia: "Ustawienia" },
+  details: { kurs: "Kurs", panel: "Panel", ustawienia: "Ustawienia" },
+};
+
+function bar(title, aside = "") {
   return `
     <span class="bar__brand">
       <span class="bar__brand-mark" aria-hidden="true">Z</span>
@@ -40,13 +52,9 @@ function brandBar(title, aside = "") {
 }
 
 function renderAppbar(route) {
-  if (!route || route.tab === "kurs" || route.screen === "list") {
-    const lessonCount = route?.screen === "list" ? "Krok 1" : "";
-    appbar.innerHTML = brandBar("ZeroDymu", lessonCount);
-    return;
-  }
-  const labels = { panel: "Panel", ustawienia: "Ustawienia" };
-  appbar.innerHTML = brandBar(labels[route.tab] ?? "ZeroDymu");
+  const isRoot = route.screen === "list" || route.screen === "panel" || route.screen === "settings";
+  const labels = isRoot ? BARS.lists : BARS.details;
+  appbar.innerHTML = bar(labels[route.tab] ?? "ZeroDymu");
 }
 
 /* --- Dolna nawigacja --- */
@@ -70,7 +78,7 @@ function screenHtml(route) {
   if (route.screen === "states") return statesScreen();
   if (route.screen === "module") return moduleScreen(route.moduleId);
   if (route.screen === "lesson") return lessonScreen(route.moduleId, route.lessonIndex);
-  if (route.screen === "quiz") return quizScreen(route.moduleId, route.lessonIndex);
+  if (route.screen === "quiz") return quizScreen(route);
   return courseListScreen();
 }
 
@@ -78,13 +86,13 @@ function render(route = currentRoute(), { resetScroll = false } = {}) {
   renderTabbar(route.tab);
 
   if (phase === "boot") {
-    appbar.innerHTML = brandBar("ZeroDymu");
+    appbar.innerHTML = bar("ZeroDymu");
     main.innerHTML = loadingState("Przygotowuję kurs…", { skeletons: 4 });
     return;
   }
 
   if (phase === "error") {
-    renderAppbar(null);
+    renderAppbar({ tab: "kurs", screen: "list" });
     main.innerHTML = errorState(bootError, { actionHtml: retryButton("retry") });
     return;
   }
@@ -96,11 +104,10 @@ function render(route = currentRoute(), { resetScroll = false } = {}) {
     ? `<div class="banner" role="status"><div><div class="banner__title">${escapeHtml(toast.title)}</div><span>${escapeHtml(toast.text)}</span></div></div>${html}`
     : html;
 
-  // Zmiana treści resetuje scroll — przywracamy go, gdy nie zmieniamy trasy.
   main.scrollTop = resetScroll ? 0 : previousScroll;
 }
 
-/** Krótki komunikat nad treścią (np. walidacja formularza nawyków). */
+/** Krótki komunikat nad treścią (walidacja, zapis postępu). */
 function showToast(title, text) {
   toast = { title, text };
   render();
@@ -109,7 +116,38 @@ function showToast(title, text) {
     render();
   }, 3200);
 }
+
 /* --- Delegacja zdarzeń --- */
+
+function handleQuizAnswer(route, actionEl) {
+  const resolved = resolveQuiz(route);
+  if (!resolved) return;
+  answerQuestion(route.path, Number(actionEl.dataset.question), Number(actionEl.dataset.option));
+  render(route);
+}
+
+function handleFinishQuiz(route) {
+  const resolved = resolveQuiz(route);
+  if (!resolved) return;
+  const { score, total } = finishQuiz(route.path, resolved.quiz, resolved.id);
+  render(route);
+  const threshold = resolved.quiz.kind === "exam" ? resolved.quiz.passScore : Math.ceil(total * 0.6);
+  showToast(
+    score >= threshold ? `Zaliczone: ${score}/${total}` : `Wynik: ${score}/${total}`,
+    score >= threshold ? "Postęp zapisany na tym urządzeniu." : "Możesz powtórzyć quiz w każdej chwili."
+  );
+}
+
+function handleMarkDone(actionEl) {
+  const moduleId = actionEl.dataset.module;
+  const index = Number(actionEl.dataset.index);
+  if (isLessonDone(getState(), moduleId, index)) {
+    markLessonOpen(moduleId, index);
+    showToast("Cofnięto oznaczenie", `Lekcja ${index + 1} nie jest już oznaczona.`);
+  } else if (markLessonDone(moduleId, index)) {
+    showToast("Oznaczono jako przeczytane", "Postęp zapisany lokalnie.");
+  }
+}
 
 function bindGlobalEvents() {
   tabbar.addEventListener("click", (event) => {
@@ -120,16 +158,28 @@ function bindGlobalEvents() {
   });
 
   main.addEventListener("click", (event) => {
-    const pathEl = event.target.closest("[data-path]");
-    if (pathEl && !pathEl.disabled) {
-      navigate(pathEl.dataset.path);
+    const route = currentRoute();
+    const actionEl = event.target.closest("[data-action]");
+    const action = actionEl?.dataset.action;
+
+    // Akcje obsługiwane w miejscu (bez zmiany trasy).
+    if (action === "answer") return handleQuizAnswer(route, actionEl);
+    if (action === "finish-quiz") return handleFinishQuiz(route);
+    if (action === "mark-done") return handleMarkDone(actionEl);
+    if (action === "retry-quiz") {
+      resetSession(route.path);
+      return render(route);
+    }
+    if (action === "jump") {
+      document.getElementById(actionEl.dataset.target)?.scrollIntoView({ behavior: "smooth", block: "start" });
       return;
     }
 
-    const actionEl = event.target.closest("[data-action]");
-    if (!actionEl) return;
+    // Nawigacja: data-path ma pierwszeństwo, potem akcje specjalne.
+    const pathEl = event.target.closest("[data-path]");
+    if (pathEl && !pathEl.disabled) return navigate(pathEl.dataset.path);
 
-    switch (actionEl.dataset.action) {
+    switch (action) {
       case "retry":
         boot();
         break;
@@ -140,7 +190,6 @@ function bindGlobalEvents() {
         confirmReset();
         break;
       case "theme":
-        // Motyw: zapis do stanu; podmianę tokenów robi subskrypcja w theme.js.
         updateSettings({ theme: actionEl.dataset.theme });
         break;
       case "demo-state":
@@ -159,15 +208,6 @@ function bindGlobalEvents() {
     }
   });
 
-  // Quiz: zaznaczanie odpowiedzi (bez oceny — to placeholder kroku 1).
-  main.addEventListener("click", (event) => {
-    const option = event.target.closest('.option[data-action="answer"]');
-    if (!option) return;
-    const block = option.closest("[data-question-block]");
-    $$('.option[data-action="answer"]', block).forEach((el) => el.setAttribute("aria-pressed", "false"));
-    option.setAttribute("aria-pressed", "true");
-  });
-
   main.addEventListener("submit", (event) => {
     const form = event.target;
     if (!form.matches("#habit-form")) return;
@@ -180,7 +220,7 @@ function bindGlobalEvents() {
     } else if (result.reason === "duplicate") {
       showToast("Taki nawyk już jest", "Wpisz inną nazwę mikronawyku.");
     } else if (result.reason === "limit") {
-      showToast("Limit demo", "W kroku 1 zapisujemy maksymalnie 20 nawyków.");
+      showToast("Limit demo", "Zapisujemy maksymalnie 20 nawyków.");
     } else {
       showToast("Puste pole", "Wpisz nazwę nawyku przed dodaniem.");
     }

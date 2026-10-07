@@ -91,6 +91,12 @@
   white-space: nowrap;
 }
 
+.badge svg {
+  display: block;
+  width: 12px;
+  height: 12px;
+}
+
 .badge--accent {
   background: var(--accent-soft);
   color: var(--accent);
@@ -308,6 +314,19 @@
   margin-bottom: 2px;
 }
 
+.stat__icon {
+  display: inline-block;
+  vertical-align: -2px;
+  margin-right: 4px;
+  color: var(--accent);
+}
+
+.stat__icon svg {
+  display: block;
+  width: 14px;
+  height: 14px;
+}
+
 .stat__value {
   font-size: var(--fs-xl);
   font-weight: 650;
@@ -374,4 +393,195 @@
 .note {
   font-size: var(--fs-sm);
   color: var(--text-faint);
+}
+
+/* --- Pigułka (najważniejsze zdanie lekcji) --- */
+
+.pill {
+  display: flex;
+  gap: var(--sp-3);
+  align-items: flex-start;
+  padding: var(--sp-4);
+  border-radius: var(--radius-md);
+  background: var(--accent-soft);
+  color: var(--text);
+  border: 1px solid transparent;
+}
+
+.pill__icon {
+  flex: 0 0 auto;
+  color: var(--accent);
+  margin-top: 1px;
+}
+
+.pill__icon svg {
+  display: block;
+  width: 20px;
+  height: 20px;
+}
+
+.pill__label {
+  display: block;
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 3px;
+}
+
+.pill__text {
+  font-weight: 550;
+  letter-spacing: -0.01em;
+}
+
+/* --- Spis treści --- */
+
+.toc {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.toc__item {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
+  padding: 9px var(--sp-2);
+  border-radius: var(--radius-xs);
+  display: flex;
+  gap: var(--sp-2);
+  align-items: baseline;
+  transition: background var(--dur) var(--ease);
+}
+
+@media (hover: hover) {
+  .toc__item:hover {
+    background: var(--surface-2);
+  }
+}
+
+.toc__num {
+  color: var(--text-faint);
+  font-size: var(--fs-xs);
+  font-variant-numeric: tabular-nums;
+  flex: 0 0 auto;
+}
+
+/* --- Sekcje lekcji --- */
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  scroll-margin-top: calc(var(--bar-h) + var(--sp-4));
+}
+
+.section__heading {
+  font-size: var(--fs-lg);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.section__list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-left: 2px;
+}
+
+.section__list li {
+  display: flex;
+  gap: var(--sp-2);
+  color: var(--text-muted);
+}
+
+.section__list li::before {
+  content: "";
+  flex: 0 0 auto;
+  width: 5px;
+  height: 5px;
+  margin-top: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+/* --- Pytanie / wyjaśnienie w quizie --- */
+
+.option--correct {
+  border-color: var(--ok);
+  background: var(--ok-soft);
+}
+
+.option--wrong {
+  border-color: var(--danger);
+  background: var(--danger-soft);
+}
+
+.option__mark {
+  margin-left: auto;
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.option--correct .option__mark {
+  color: var(--ok);
+}
+
+.option--wrong .option__mark {
+  color: var(--danger);
+}
+
+.explanation {
+  margin-top: var(--sp-2);
+  padding: var(--sp-3);
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+  font-size: var(--fs-sm);
+  color: var(--text-muted);
+  border-left: 3px solid var(--accent);
+}
+
+.explanation__label {
+  display: block;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 2px;
+}
+
+.result-score {
+  font-size: 2.4rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+}
+
+.result-score__unit {
+  font-size: var(--fs-lg);
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+/* --- Quiz: postęp pytań --- */
+
+.quiz-progress {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+}
+
+.quiz-progress__text {
+  flex: 0 0 auto;
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.quiz-progress .progress {
+  flex: 1 1 auto;
 }

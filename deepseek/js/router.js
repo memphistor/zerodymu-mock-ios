@@ -16,6 +16,7 @@ export const paths = {
   panel: () => "panel",
   ustawienia: () => "ustawienia",
   states: () => "ustawienia/stany",
+  exam: () => "kurs/egzamin",
   module: (id) => `kurs/modul/${id}`,
   lesson: (moduleId, index) => `kurs/modul/${moduleId}/lekcja/${index}`,
   quiz: (moduleId, index) => `kurs/modul/${moduleId}/lekcja/${index}/quiz`,
@@ -37,6 +38,10 @@ export function parsePath(path) {
     return { tab: "ustawienia", path: clean, screen: "states" };
   }
 
+  if (clean === "kurs/egzamin") {
+    return { tab: "kurs", path: clean, screen: "quiz", exam: true };
+  }
+
   let m = clean.match(/^kurs\/modul\/([^/]+)\/lekcja\/(\d+)\/quiz$/);
   if (m) {
     return {
@@ -49,7 +54,16 @@ export function parsePath(path) {
   }
 
   m = clean.match(/^kurs\/modul\/([^/]+)\/quiz-modulu$/);
-  if (m) return { tab: "kurs", path: clean, screen: "quiz", moduleId: m[1], lessonIndex: null };
+  if (m) {
+    return {
+      tab: "kurs",
+      path: clean,
+      screen: "quiz",
+      exam: false,
+      moduleId: m[1],
+      lessonIndex: null,
+    };
+  }
 
   m = clean.match(/^kurs\/modul\/([^/]+)\/lekcja\/(\d+)$/);
   if (m) {

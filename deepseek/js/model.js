@@ -94,17 +94,3 @@ export function migrate(raw) {
 export function patchState(current, partial) {
   return finalize(deepMerge(current, partial));
 }
-
-/** Wyliczone wartości pochodne (nie zapisujemy ich w localStorage). */
-export function derive(state) {
-  const lessonEntries = Object.values(state.progress.lessons);
-  const lessonsDone = lessonEntries.filter((l) => l && l.status === "done").length;
-  const quizzesDone = Object.keys(state.progress.quizzes).length;
-
-  return {
-    lessonsDone,
-    quizzesDone,
-    hasProgress: lessonsDone > 0 || quizzesDone > 0,
-    isFresh: !state.progress.startedAt,
-  };
-}

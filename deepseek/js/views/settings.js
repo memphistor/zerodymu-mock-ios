@@ -1,7 +1,7 @@
 /** Zakładka Ustawienia: motyw, informacje o danych, reset demo. */
 
 import { escapeHtml } from "../dom.js";
-import { getState, getAdapterInfo, resetDemo, storage, STORAGE_KEY } from "../store.js";
+import { getState, getAdapterInfo, resetDemo, STORAGE_KEY } from "../store.js";
 import { badge } from "../ui/components.js";
 import { emptyState } from "../ui/states.js";
 import { iconMarkup } from "../ui/icons.js";
@@ -82,12 +82,12 @@ export function settingsScreen() {
     </section>
 
     ${
-      storage.persistent
+      persistent
         ? ""
         : emptyState({
             icon: "warn",
             title: "Tryb prywatny",
-            text: "Postęp nie będzie zapisany po zamknięciu karty.",
+            text: "Postęp nie będzie zapisany po zamknięciu karty. Wszystko inne działa normalnie.",
           })
     }
   `;

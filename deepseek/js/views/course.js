@@ -1,20 +1,31 @@
-/** Zakładka Kurs: lista modułów oraz ekran modułu. */
+/** Zakładka Kurs: lista modułów, karta egzaminu i ekran modułu. */
 
 import { escapeHtml } from "../dom.js";
 import { courseMeta, modules, getModule } from "../data/course.js";
-import { badge, moduleCard, lessonRow, progressBar } from "../ui/components.js";
+import { getState } from "../store.js";
+import { courseProgress } from "../logic/progress.js";
+import { moduleStatus } from "../logic/locks.js";
+import { badge, moduleCard, lessonRow, progressBar, statusBadge } from "../ui/components.js";
 import { emptyState, primaryAction } from "../ui/states.js";
 import { iconMarkup } from "../ui/icons.js";
 
-/** Lista 6 modułów (placeholdery tytułów i opisów). */
+/* --- Lista modułów --- */
+
 export function courseListScreen() {
+  const state = getState();
+  const progress = courseProgress(state);
+
   const list = modules.length
-    ? `<div class="module-list">${modules.map(moduleCard).join("")}</div>`
+    ? `<div class="module-list">${modules.map((mod) => moduleCard(state, mod)).join("")}</div>`
     : emptyState({
         icon: "book",
         title: "Brak modułów",
-        text: "Treść kursu pojawi się w kolejnym kroku.",
+        text: "Treść kursu pojawi się tutaj po dodaniu modułów.",
       });
+
+  const examStatus = state.progress.examPassed
+    ? badge("Zdany", "ok")
+    : badge(`${courseMeta.exam.questionCount} pytań`, "");
 
   return `
     <header class="screen-header">
@@ -25,34 +36,55 @@ export function courseListScreen() {
     <section class="card card--flat">
       <div class="card__head">
         <div>
-          <div class="card__title">Twój start</div>
-          <p class="card__desc">Kurs jest odblokowany od pierwszego uruchomienia — bez opłat.</p>
+          <div class="card__title">
+            <span class="stat__icon" aria-hidden="true">${iconMarkup("spark", { size: 14 })}</span>Twój postęp
+          </div>
+          <p class="card__desc">Cały kurs jest odblokowany od startu — bez opłat.</p>
         </div>
         ${badge("Dostęp pełny", "ok")}
       </div>
       <div class="module-card__footer">
-        ${progressBar(0)}
+        ${progressBar(progress.percent, { empty: progress.percent === 0, label: "Postęp kursu" })}
         <div class="module-card__meta">
-          <span>${modules.length} modułów · ${courseMeta.lessonCount} lekcji</span>
-          <span>0%</span>
+          <span>${progress.done} z ${progress.total} lekcji</span>
+          <span>${progress.percent}%</span>
         </div>
       </div>
     </section>
 
     <div class="module-head">
       <h2>Moduły</h2>
-      <span class="note">Placeholdery kroku 1</span>
+      <span class="note">6 modułów · ${courseMeta.lessonCount} lekcji</span>
     </div>
     ${list}
+
+    <section class="card card--link" data-path="kurs/egzamin" role="button" tabindex="0">
+      <div class="exam-card">
+        <span class="exam-card__icon" aria-hidden="true">${iconMarkup("trophy", { size: 20 })}</span>
+        <div class="exam-card__body">
+          <div class="card__head">
+            <div class="card__title">Egzamin końcowy</div>
+            ${examStatus}
+          </div>
+          <p class="card__desc" style="margin-top:6px">
+            ${courseMeta.exam.questionCount} pytań z całego kursu. Wynik ${courseMeta.exam.passScore}/${courseMeta.exam.questionCount} oznacza zaliczenie.
+          </p>
+        </div>
+      </div>
+    </section>
   `;
 }
 
-/** Ekran pojedynczego modułu: opis + lista lekcji + quiz modułu. */
+/* --- Ekran modułu --- */
+
 export function moduleScreen(moduleId) {
   const mod = getModule(moduleId);
   if (!mod) return moduleNotFound(moduleId);
 
-  const lessons = mod.lessons.map((lesson, i) => lessonRow(mod, lesson, i)).join("");
+  const state = getState();
+  const status = moduleStatus(state, moduleId);
+  const lessons = mod.lessons.map((lesson, i) => lessonRow(state, mod, lesson, i)).join("");
+  const quizAvailable = Boolean(status.key === "done" || status.done > 0);
 
   return `
     <header class="screen-header">
@@ -66,12 +98,20 @@ export function moduleScreen(moduleId) {
       <div class="card__head">
         <div>
           <div class="card__title">Postęp modułu</div>
-          <p class="card__desc">Zacznij od pierwszej lekcji — kolejność dowolna w tym kroku.</p>
+          <p class="card__desc">${status.reason || "Zacznij od pierwszej lekcji — kolejność dowolna."}</p>
         </div>
-        ${badge("0 / " + mod.lessons.length, "")}
+        ${statusBadge(state, moduleId).html}
       </div>
-      <div class="module-card__footer">${progressBar(0, { empty: true })}</div>
+      <div class="module-card__footer">
+        ${progressBar(status.percent, { empty: status.percent === 0, label: `Postęp modułu ${mod.index}` })}
+        <div class="module-card__meta">
+          <span>${status.done} z ${status.total} lekcji</span>
+          <span>${status.percent}%</span>
+        </div>
+      </div>
     </section>
+
+    ${mod.hasContent ? "" : contentNotice()}
 
     <div class="module-head">
       <h2>Lekcje</h2>
@@ -83,15 +123,26 @@ export function moduleScreen(moduleId) {
       <div class="card__head">
         <div>
           <div class="card__title">Quiz modułu ${mod.index}</div>
-          <p class="card__desc"></p>
+          <p class="card__desc" style="margin-top:4px">5 pytań z wyjaśnieniami po każdej odpowiedzi.</p>
         </div>
-        ${badge("Placeholder", "warn")}
+        ${quizAvailable ? badge("5 pytań", "accent") : badge("Dostępny", "")}
       </div>
       <div class="card__meta">
-        ${iconMarkup("cap", { size: 16 })}<span>Krótkie sprawdzenie po lekcjach — treść w kolejnym kroku.</span>
+        ${iconMarkup("cap", { size: 16 })}<span>Krótkie sprawdzenie materiału po lekcjach.</span>
       </div>
     </section>
   `;
+}
+
+function contentNotice() {
+  return `
+    <div class="banner">
+        ${iconMarkup("heart", { size: 18 })}
+        <div>
+          <div class="banner__title">Treść lekcji w kroku 3</div>
+          <span>Na razie pokazujemy pigułkę i układ ekranu. Quiz modułu już działa.</span>
+        </div>
+    </div>`;
 }
 
 export function backButton(path = "kurs", label = "Kurs") {
@@ -106,7 +157,7 @@ function moduleNotFound(moduleId) {
     <header class="screen-header">
       ${backButton()}
       <h1>Nie znaleziono modułu</h1>
-      <p>Odnośnik <code>${escapeHtml(moduleId)}</code> nie pasuje do żadnego modułu w tym kroku.</p>
+      <p>Odnośnik <code>${escapeHtml(moduleId)}</code> nie pasuje do żadnego modułu.</p>
     </header>
     ${emptyState({
       icon: "warn",

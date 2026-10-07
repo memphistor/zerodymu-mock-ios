@@ -102,6 +102,12 @@
   margin-top: 2px;
 }
 
+.module-card__sub {
+  color: var(--text-muted);
+  font-size: var(--fs-sm);
+  margin-top: 6px;
+}
+
 .module-card__footer {
   margin-top: var(--sp-3);
   display: flex;
@@ -115,6 +121,34 @@
   font-size: var(--fs-xs);
   color: var(--text-faint);
   font-variant-numeric: tabular-nums;
+}
+
+.module-card--locked {
+  opacity: 0.72;
+}
+
+/* --- Karta egzaminu --- */
+
+.exam-card {
+  display: flex;
+  gap: var(--sp-3);
+  align-items: flex-start;
+}
+
+.exam-card__icon {
+  flex: 0 0 auto;
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-sm);
+  display: grid;
+  place-items: center;
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.exam-card__body {
+  min-width: 0;
+  flex: 1 1 auto;
 }
 
 /* --- Lekcje --- */
@@ -160,6 +194,17 @@
   font-size: var(--fs-xs);
   font-weight: 700;
   font-variant-numeric: tabular-nums;
+}
+
+.lesson-row__num--done {
+  background: var(--ok-soft);
+  color: var(--ok);
+}
+
+.lesson-row__num svg {
+  display: block;
+  width: 14px;
+  height: 14px;
 }
 
 .lesson-row__body {
@@ -326,6 +371,14 @@
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--text-faint);
+}
+
+.placeholder-block__label svg {
+  display: inline-block;
+  vertical-align: -2px;
+  width: 14px;
+  height: 14px;
+  color: var(--accent);
 }
 
 .placeholder-block__value {
