@@ -1,36 +1,78 @@
 /**
- * Struktura kursu — 6 modułów z treścią zastępczą.
- * Prawdziwe tytuły i opisy zastąpią placeholdery w kolejnym kroku;
- * identyfikatory (m1, m1-l1, m1-quiz) są stabilne i trafiają do localStorage.
+ * Struktura kursu: 6 modułów (treść w js/data/content/), egzamin (js/data/exam.js).
+ *
+ * Identyfikatory są stabilne i trafiają do localStorage:
+ *   moduł m1, lekcja m1-l1, quiz lekcji m1-l1-quiz, quiz modułu m1-quiz, egzamin exam.
  */
 
-const LESSONS_PER_MODULE = 3;
-const QUESTIONS_PER_QUIZ = 3;
-const MODULE_COUNT = 6;
+import m1 from './content/m1.js';
+import m2 from './content/m2.js';
+import m3 from './content/m3.js';
+import m4 from './content/m4.js';
+import m5 from './content/m5.js';
+import m6 from './content/m6.js';
+import { EXAM_QUESTIONS } from './exam.js';
 
-function buildModule(order) {
-  const id = `m${order}`;
+export const LESSON_PASS_RATIO = 0.6;
+export const MODULE_PASS_RATIO = 0.6;
+export const EXAM_PASS_RATIO = 0.7;
+
+/**
+ * Quiz: { id, kind: 'lesson'|'module'|'exam', title, questions, passRatio, feedback }
+ * feedback: 'immediate' (wyjaśnienie po każdym pytaniu) | 'end' (wyniki na końcu).
+ */
+function buildQuiz({ id, kind, title, questions, passRatio, feedback }) {
+  return { id, kind, title, questions, passRatio, feedback };
+}
+
+function buildModule(raw, index) {
+  const order = index + 1;
+  const lessons = raw.lessons.map((lesson, i) => ({
+    ...lesson,
+    order: i + 1,
+    moduleId: raw.id,
+    quiz: buildQuiz({
+      id: `${lesson.id}-quiz`,
+      kind: 'lesson',
+      title: `Quiz do lekcji ${i + 1}`,
+      questions: lesson.quiz,
+      passRatio: LESSON_PASS_RATIO,
+      feedback: 'immediate',
+    }),
+  }));
+
   return {
-    id,
+    id: raw.id,
     order,
-    title: `Moduł ${order} — tytuł wkrótce`,
-    summary: 'Krótki opis modułu pojawi się tutaj. Treść w przygotowaniu.',
-    lessons: Array.from({ length: LESSONS_PER_MODULE }, (_, i) => ({
-      id: `${id}-l${i + 1}`,
-      order: i + 1,
-      title: `Lekcja ${i + 1} — tytuł wkrótce`,
-      minutes: 5,
-    })),
-    quiz: {
-      id: `${id}-quiz`,
-      title: `Quiz — moduł ${order}`,
-      questionCount: QUESTIONS_PER_QUIZ,
-      optionsPerQuestion: 3,
-    },
+    title: raw.title,
+    summary: raw.summary,
+    goals: raw.goals,
+    lessons,
+    minutes: lessons.reduce((sum, l) => sum + l.minutes, 0),
+    quiz: buildQuiz({
+      id: `${raw.id}-quiz`,
+      kind: 'module',
+      title: `Quiz modułu ${order}`,
+      questions: raw.quiz,
+      passRatio: MODULE_PASS_RATIO,
+      feedback: 'immediate',
+    }),
   };
 }
 
-export const MODULES = Array.from({ length: MODULE_COUNT }, (_, i) => buildModule(i + 1));
+export const MODULES = [m1, m2, m3, m4, m5, m6].map(buildModule);
+
+export const EXAM = buildQuiz({
+  id: 'exam',
+  kind: 'exam',
+  title: 'Egzamin końcowy',
+  questions: EXAM_QUESTIONS,
+  passRatio: EXAM_PASS_RATIO,
+  feedback: 'end',
+});
+
+export const TOTAL_LESSONS = MODULES.reduce((sum, m) => sum + m.lessons.length, 0);
+export const TOTAL_MINUTES = MODULES.reduce((sum, m) => sum + m.minutes, 0);
 
 export const getModule = (moduleId) => MODULES.find((m) => m.id === moduleId) ?? null;
 
@@ -47,4 +89,38 @@ export function getLesson(moduleId, lessonId) {
   };
 }
 
-export const TOTAL_LESSONS = MODULES.reduce((sum, m) => sum + m.lessons.length, 0);
+/** Wszystkie lekcje kursu w kolejności (do „następnej lekcji”). */
+export const ALL_LESSONS = MODULES.flatMap((m) => m.lessons.map((lesson) => ({ module: m, lesson })));
+
+/** Liczba poprawnych odpowiedzi potrzebna do zaliczenia. */
+export const passCount = (quiz) => Math.ceil(quiz.passRatio * quiz.questions.length - 1e-9);
+
+/**
+ * Rozwiązuje quiz na podstawie trasy.
+ * kind 'lesson' → { moduleId, lessonId }, 'module' → { moduleId }, 'exam' → {}
+ */
+export function resolveQuiz({ kind, moduleId, lessonId }) {
+  if (kind === 'exam') {
+    return { quiz: EXAM, module: null, lesson: null, back: { href: '#/kurs', label: 'Kurs' }, eyebrow: 'Egzamin końcowy' };
+  }
+  const module = getModule(moduleId);
+  if (!module) return null;
+  if (kind === 'module') {
+    return {
+      quiz: module.quiz,
+      module,
+      lesson: null,
+      back: { href: `#/kurs/${module.id}`, label: `Moduł ${module.order}` },
+      eyebrow: `Moduł ${module.order}`,
+    };
+  }
+  const found = getLesson(moduleId, lessonId);
+  if (!found) return null;
+  return {
+    quiz: found.lesson.quiz,
+    module,
+    lesson: found.lesson,
+    back: { href: `#/kurs/${module.id}/lekcja/${found.lesson.id}`, label: 'Lekcja' },
+    eyebrow: `Moduł ${module.order} · Lekcja ${found.lesson.order}`,
+  };
+}

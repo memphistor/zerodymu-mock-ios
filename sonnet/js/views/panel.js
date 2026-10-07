@@ -1,7 +1,7 @@
 import { h } from '../dom.js';
 import { getState } from '../store.js';
-import { MODULES, getLesson } from '../data/course.js';
-import { courseStats } from '../logic/progress.js';
+import { EXAM } from '../data/course.js';
+import { courseStats, nextUp } from '../logic/progress.js';
 import { screen, screenHead, badge, plural } from '../ui/components.js';
 import { icon } from '../ui/icons.js';
 import { emptyState } from '../ui/states.js';
@@ -38,28 +38,41 @@ export default function panelView() {
     journalCard(panel.journal));
 }
 
+/** Karta „następny krok” — prowadzi do pierwszej niezaliczonej lekcji, quizu modułu lub egzaminu. */
 function continueCard(state) {
-  const last = state.progress.lastVisited;
-  const found = last && last.lessonId ? getLesson(last.moduleId, last.lessonId) : null;
+  const next = nextUp(state);
+  const started = courseStats(state).lessonsDone > 0 || state.progress.lastVisited !== null;
 
-  let href;
-  let title;
-  let meta;
-  if (found) {
-    href = `#/kurs/${found.module.id}/lekcja/${found.lesson.id}`;
-    title = found.lesson.title;
-    meta = `Moduł ${found.module.order} · wróć tam, gdzie skończono`;
-  } else {
-    const first = MODULES[0];
-    href = first ? `#/kurs/${first.id}` : '#/kurs';
-    title = first ? first.title : 'Kurs';
-    meta = 'Zacznij od pierwszego modułu';
+  let href = '#/kurs';
+  let eyebrow = 'Kurs';
+  let title = 'Kurs ukończony';
+  let meta = 'Gratulacje! Do lekcji możesz wracać, kiedy chcesz.';
+  let iconName = 'trophy';
+
+  if (next && next.kind === 'lesson') {
+    href = `#/kurs/${next.module.id}/lekcja/${next.lesson.id}`;
+    eyebrow = started ? 'Następna lekcja' : 'Start';
+    title = next.lesson.title;
+    meta = `Moduł ${next.module.order} · ok. ${next.lesson.minutes} min`;
+    iconName = 'book';
+  } else if (next && next.kind === 'module-quiz') {
+    href = `#/kurs/${next.module.id}/quiz`;
+    eyebrow = 'Następny krok';
+    title = next.module.quiz.title;
+    meta = `Moduł ${next.module.order} · ${next.module.quiz.questions.length} pytań`;
+    iconName = 'quiz';
+  } else if (next && next.kind === 'exam') {
+    href = '#/kurs/egzamin';
+    eyebrow = 'Następny krok';
+    title = EXAM.title;
+    meta = `${EXAM.questions.length} pytań z całego kursu`;
+    iconName = 'trophy';
   }
 
   return h('a', { class: 'card card--link', href },
-    h('span', { class: 'module-card__num', 'aria-hidden': 'true' }, icon('book', 22)),
+    h('span', { class: 'module-card__num', 'aria-hidden': 'true' }, icon(iconName, 22)),
     h('span', { class: 'module-card__body' },
-      h('span', { class: 'eyebrow' }, found ? 'Kontynuuj' : 'Start'),
+      h('span', { class: 'eyebrow' }, eyebrow),
       h('span', { class: 'module-card__title' }, title),
       h('span', { class: 'module-card__summary' }, meta)),
     h('span', { class: 'module-card__chevron' }, icon('chevronRight', 20)));

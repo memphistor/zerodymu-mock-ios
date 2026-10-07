@@ -9,11 +9,15 @@
 import { mount } from './dom.js';
 import { loadingState, errorState, emptyState } from './ui/states.js';
 
+// `props` są dołączane do parametrów trasy. Kolejność ma znaczenie: stałe segmenty
+// (np. /kurs/egzamin) muszą być przed wzorcami z parametrem (/kurs/:moduleId).
 const ROUTES = [
   { pattern: '/kurs', tab: 'kurs', load: () => import('./views/course.js') },
+  { pattern: '/kurs/egzamin', tab: 'kurs', props: { kind: 'exam' }, load: () => import('./views/quiz.js') },
   { pattern: '/kurs/:moduleId', tab: 'kurs', load: () => import('./views/module.js') },
   { pattern: '/kurs/:moduleId/lekcja/:lessonId', tab: 'kurs', load: () => import('./views/lesson.js') },
-  { pattern: '/kurs/:moduleId/quiz', tab: 'kurs', load: () => import('./views/quiz.js') },
+  { pattern: '/kurs/:moduleId/lekcja/:lessonId/quiz', tab: 'kurs', props: { kind: 'lesson' }, load: () => import('./views/quiz.js') },
+  { pattern: '/kurs/:moduleId/quiz', tab: 'kurs', props: { kind: 'module' }, load: () => import('./views/quiz.js') },
   { pattern: '/panel', tab: 'panel', load: () => import('./views/panel.js') },
   { pattern: '/ustawienia', tab: 'ustawienia', load: () => import('./views/settings.js') },
   { pattern: '/ustawienia/stany', tab: 'ustawienia', load: () => import('./views/states-demo.js') },
@@ -60,7 +64,7 @@ function match(path) {
       }
       return part === segments[i];
     });
-    if (ok) return { route, params };
+    if (ok) return { route, params: { ...route.props, ...params } };
   }
   return null;
 }

@@ -1,8 +1,11 @@
 /**
- * Szkic modelu danych ZeroDymu (wersja schematu 1).
+ * Model danych ZeroDymu (wersja schematu 2).
  *
  * Całość żyje w jednym kluczu localStorage jako JSON. Klucz jest unikalny dla
  * tego prototypu, bo wszystkie warianty mocków na github.io dzielą ten sam origin.
+ *
+ * Zmiany względem v1: quizy mają prawdziwe wyniki (lastScore, bestScore);
+ * wpis quizu z v1 bez wyniku nie liczy się jako zaliczony.
  *
  * @typedef {'system'|'light'|'dark'} ThemePref
  *
@@ -10,12 +13,14 @@
  * @property {string} completedAt  ISO datetime ukończenia lekcji
  *
  * @typedef {Object} QuizProgress
+ *   Klucze: `m1-l1-quiz` (lekcja), `m1-quiz` (moduł), `exam` (egzamin).
  * @property {number} attempts          liczba zakończonych podejść
- * @property {number|null} lastScore    wynik 0–1 (null dopóki quizy są szkicem)
+ * @property {number|null} lastScore    ostatni wynik 0–1
+ * @property {number|null} bestScore    najlepszy wynik 0–1 (null = brak wyniku)
  * @property {string|null} completedAt  ISO datetime ostatniego zakończenia
  *
  * @typedef {Object} AppState
- * @property {1} schemaVersion
+ * @property {2} schemaVersion
  * @property {string} createdAt
  * @property {{ role: 'kursant', displayName: string }} profile
  *   Kursant od startu — pełny dostęp, bez paywalla (brak pola planu/subskrypcji).
@@ -32,8 +37,8 @@
  * }} panel  Placeholdery panelu — na razie puste.
  */
 
-export const APP_VERSION = '0.1.0';
-export const SCHEMA_VERSION = 1;
+export const APP_VERSION = '0.2.0';
+export const SCHEMA_VERSION = 2;
 export const STORAGE_KEY = 'zerodymu:sonnet:data';
 export const THEME_PREFS = ['system', 'light', 'dark'];
 
@@ -52,6 +57,7 @@ export function createDefaultState(now = new Date()) {
 const isObject = (v) => v !== null && typeof v === 'object' && !Array.isArray(v);
 const isString = (v) => typeof v === 'string';
 const isIso = (v) => isString(v) && !Number.isNaN(Date.parse(v));
+const toScore = (v) => (typeof v === 'number' && v >= 0 && v <= 1 ? v : null);
 
 /**
  * Zamienia dowolną wartość (np. z localStorage) na poprawny AppState.
@@ -96,12 +102,10 @@ export function normalizeState(raw) {
     for (const [id, entry] of Object.entries(progress.quizzes)) {
       if (!isObject(entry)) continue;
       const attempts = Number.isInteger(entry.attempts) && entry.attempts > 0 ? entry.attempts : 0;
-      const score = typeof entry.lastScore === 'number' && entry.lastScore >= 0 && entry.lastScore <= 1
-        ? entry.lastScore
-        : null;
       state.progress.quizzes[id] = {
         attempts,
-        lastScore: score,
+        lastScore: toScore(entry.lastScore),
+        bestScore: toScore(entry.bestScore),
         completedAt: isIso(entry.completedAt) ? entry.completedAt : null,
       };
     }

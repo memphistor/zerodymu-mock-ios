@@ -28,7 +28,10 @@ export function init() {
     return;
   }
   try {
-    state = normalizeState(JSON.parse(result.value));
+    const parsed = JSON.parse(result.value);
+    state = normalizeState(parsed);
+    // Zapisz zmigrowany stan (np. po podniesieniu wersji schematu).
+    if (!parsed || parsed.schemaVersion !== state.schemaVersion) persist();
   } catch {
     writeItem(BACKUP_KEY, result.value);
     status.recovered = true;

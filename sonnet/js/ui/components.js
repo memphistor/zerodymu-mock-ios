@@ -37,29 +37,42 @@ export function badge(text, { accent = false } = {}) {
   return h('span', { class: `badge${accent ? ' badge--accent' : ''}` }, text);
 }
 
-/** Wiersz listy: status (kółko) + tytuł/meta + opcjonalny chevron. */
-export function listRow({ href, title, meta, iconName, done = false }) {
+/**
+ * Wiersz listy: status (kółko) + tytuł/meta + chevron.
+ * locked: wizualna kłódka i przyciemnienie (wiersz nadal jest klikalny — locki są w kroku 2 tylko wizualne).
+ */
+export function listRow({ href, title, meta, iconName, done = false, locked = false }) {
+  const statusIcon = done ? 'check' : locked ? 'lock' : iconName;
   const content = [
-    h('span', { class: `row__status${done ? ' is-done' : ''}`, 'aria-hidden': 'true' },
-      icon(done ? 'check' : iconName, 18)),
+    h('span', { class: `row__status${done ? ' is-done' : ''}`, 'aria-hidden': 'true' }, icon(statusIcon, 18)),
     h('span', { class: 'row__body' },
       h('span', { class: 'row__title' }, title),
       meta && h('span', { class: 'row__meta' }, meta)),
     h('span', { class: 'row__chevron' }, icon('chevronRight', 20)),
   ];
-  return h('a', { class: 'row', href }, content);
+  return h('a', { class: `row${locked ? ' row--locked' : ''}`, href }, content);
 }
 
-/** Linie zastępcze dla treści, której jeszcze nie ma. */
-const LINE_WIDTHS = {
-  title: ['ph-line--title'],
-  paragraph: ['ph-line--90', '', 'ph-line--75', 'ph-line--50'],
-  short: ['ph-line--90', 'ph-line--50'],
+const STATUS_LABELS = {
+  locked: 'Zablokowany',
+  new: 'Do rozpoczęcia',
+  progress: 'W trakcie',
+  done: 'Ukończony',
 };
 
-export function placeholderLines(variant = 'paragraph') {
-  return h('div', { class: 'ph-lines', 'aria-hidden': 'true' },
-    LINE_WIDTHS[variant].map((width) => h('div', { class: `ph-line ${width}`.trim() })));
+/** Plakietka statusu modułu: locked | new | progress | done. */
+export function statusBadge(status) {
+  const withIcon = status === 'locked' || status === 'done';
+  return h('span', { class: `badge badge--status badge--${status}` },
+    withIcon && icon(status === 'locked' ? 'lock' : 'check', 12),
+    STATUS_LABELS[status]);
+}
+
+/** Spokojna informacja w treści ekranu (np. wizualny lock). */
+export function notice(text, iconName = 'info') {
+  return h('div', { class: 'notice', role: 'note' },
+    h('span', { class: 'notice__icon' }, icon(iconName, 20)),
+    h('p', null, text));
 }
 
 export function formatDate(iso) {
