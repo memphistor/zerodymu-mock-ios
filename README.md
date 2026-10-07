@@ -1,36 +1,28 @@
-# ZeroDymu — mock iOS (HTML)
+# zerodymu-mock-ios
 
-Mobilna mock-aplikacja kursu ZeroDymu: kurs z odblokowaniami, quizy, panel (papierosy, streak, nawyki, zdrowie, zniżka). Dane w `localStorage`.
+Hosting statycznych mocków ZeroDymu na **GitHub Pages**.
 
-## Uruchomienie
+## GitHub Pages
 
-### Chrome (widok telefonu)
+| Ustawienie | Wartość |
+|------------|---------|
+| Branch | `main` |
+| Folder | `/ (root)` |
+| URL | https://memphistor.github.io/zerodymu-mock-ios/ |
 
-1. Otwórz folder `Composer` w terminalu.
-2. `python3 -m http.server 8080`
-3. Wejdź na `http://localhost:8080`
-4. DevTools → urządzenie mobilne (np. iPhone 15 Pro).
+Korzeń (`index.html`) przekierowuje do aktywnego wariantu **Sonnet**.
 
-> Przy samym `file://` część funkcji może działać, ale **zalecany jest prosty serwer HTTP** (ścieżki skryptów, clipboard).
+## Warianty
 
-### iPhone (iCloud / pliki)
+| Folder | Opis | URL |
+|--------|------|-----|
+| `sonnet/` | Prototyp z repo Testy (`Sonnet/`) | [/sonnet/](https://memphistor.github.io/zerodymu-mock-ios/sonnet/) |
+| `composer/` | Wcześniejszy mock (archiwum w repo) | [/composer/](https://memphistor.github.io/zerodymu-mock-ios/composer/) |
 
-Wrzuć cały folder `Composer` do iCloud Drive i otwórz `index.html` w Safari, albo opublikuj na **GitHub Pages** (patrz niżej).
+Pliki `.nojekyll` wyłączają Jekyll.
 
-### GitHub Pages
+## Deploy
 
-1. Utwórz repo z zawartością folderu `Composer` w katalogu głównym (wraz z `index.html`).
-2. Settings → Pages → Source: branch `main`, folder `/ (root)`.
-3. Adres: `https://<user>.github.io/<repo>/`
+Po zmianach w lokalnym folderze `Sonnet/` (repo Testy): skopiuj zawartość do `sonnet/` tutaj, commit + push na `main`. Pages odświeża się zwykle w 1–2 minuty.
 
-Plik `.nojekyll` jest już w projekcie (Jekyll off).
-
-## Zakładki
-
-- **Kurs** — moduły, lekcje, quizy, egzamin
-- **Panel** — statystyki, tracker, streak, nawyki, zdrowie, osiągnięcia, zniżka
-- **Ustawienia** — motyw, reset demo
-
-## Reset
-
-Ustawienia → „Reset danych demo” lub usuń klucz `zerodymu-mock-v1` w localStorage.
+Szczegóły uruchomienia lokalnego: `sonnet/README.md` (kopia z Testy).
