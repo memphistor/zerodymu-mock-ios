@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="ZeroDymu">
+  <rect width="64" height="64" rx="16" fill="#2f7f6d"/>
+  <circle cx="32" cy="32" r="17" fill="none" stroke="#eef6f2" stroke-width="5"/>
+  <path d="M32 15c9 0 17 7 17 17s-7 17-17 17" fill="#7fd3bf" opacity="0.55"/>
+  <circle cx="42" cy="22" r="3.2" fill="#eef6f2"/>
+</svg>

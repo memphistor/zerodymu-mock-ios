@@ -1,0 +1,759 @@
+/* Komponenty wielokrotnego użytku: nagłówki, karty, listy, przyciski,
+   pasek postępu, znaczniki, pigułka, opcje, stany, skeletony. */
+
+/* ---------- Nagłówek ekranu ---------- */
+
+.screen-header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin-bottom: var(--space-5);
+}
+
+.screen-header__row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.screen-header__text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.eyebrow {
+  font-size: 0.75rem;
+  font-weight: 620;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.screen-title {
+  font-size: 1.65rem;
+}
+
+.screen-subtitle {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+
+.link-back {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  align-self: flex-start;
+  padding: var(--space-1) var(--space-3) var(--space-1) var(--space-1);
+  margin-left: calc(-1 * var(--space-1));
+  border-radius: var(--radius-pill);
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  font-weight: 560;
+  transition: color var(--transition), background-color var(--transition);
+}
+
+.link-back:hover {
+  color: var(--text);
+  background: var(--surface-2);
+}
+
+/* ---------- Karta ---------- */
+
+.card {
+  display: block;
+  padding: var(--space-4);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-m);
+  box-shadow: var(--shadow-s);
+}
+
+.card--flush {
+  padding: 0;
+}
+
+.card--soft {
+  background: var(--surface-2);
+  border-color: transparent;
+  box-shadow: none;
+}
+
+.card--accent {
+  background: var(--accent-soft);
+  border-color: color-mix(in oklab, var(--accent) 22%, transparent);
+  color: var(--text);
+}
+
+.card--interactive {
+  transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.card--interactive:hover {
+  border-color: var(--border-strong);
+  box-shadow: var(--shadow-m);
+}
+
+.card--interactive:active {
+  transform: scale(0.985);
+}
+
+.card__title {
+  font-size: 1.05rem;
+  font-weight: 620;
+}
+
+.card__text {
+  margin-top: var(--space-1);
+  color: var(--text-muted);
+  font-size: 0.92rem;
+}
+
+/* ---------- Listy ---------- */
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.list-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  padding: var(--space-3);
+  text-align: left;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-s);
+  transition: border-color var(--transition), background-color var(--transition), transform var(--transition);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.list-item--interactive:hover {
+  border-color: var(--border-strong);
+}
+
+.list-item--interactive:active {
+  transform: scale(0.99);
+}
+
+.list-item.is-disabled {
+  opacity: 0.62;
+}
+
+.list-item__icon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-xs);
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.list-item__body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  flex: 1;
+}
+
+.list-item__title {
+  font-weight: 580;
+  font-size: 0.97rem;
+}
+
+.list-item__desc {
+  color: var(--text-muted);
+  font-size: 0.84rem;
+  line-height: 1.4;
+}
+
+.list-item__trailing {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex: none;
+  color: var(--text-faint);
+}
+
+/* ---------- Przyciski ---------- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-s);
+  font-weight: 580;
+  font-size: 0.95rem;
+  border: 1px solid transparent;
+  transition: transform var(--transition), background-color var(--transition), border-color var(--transition);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+.btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.btn--primary {
+  background: var(--accent);
+  color: var(--accent-contrast);
+  box-shadow: var(--shadow-s);
+}
+
+.btn--primary:hover {
+  background: var(--accent-strong);
+}
+
+.btn--soft {
+  background: var(--surface-2);
+  color: var(--text);
+}
+
+.btn--soft:hover {
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+}
+
+.btn--ghost {
+  background: transparent;
+  border-color: var(--border);
+  color: var(--text-muted);
+}
+
+.btn--ghost:hover {
+  border-color: var(--border-strong);
+  color: var(--text);
+}
+
+.btn--danger {
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+
+.btn--block {
+  width: 100%;
+}
+
+.btn-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+/* ---------- Sekcja ---------- */
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.section__head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.section__title {
+  font-size: 1.06rem;
+}
+
+.section__desc {
+  margin-top: var(--space-1);
+  color: var(--text-muted);
+  font-size: 0.88rem;
+}
+
+/* ---------- Pasek postępu ---------- */
+
+.progress {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.progress__meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.progress__value {
+  font-weight: 600;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+
+.progress__track {
+  height: 7px;
+  background: var(--surface-2);
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+}
+
+.progress__fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--accent-strong));
+  border-radius: inherit;
+  transition: width var(--transition);
+}
+
+/* ---------- Znaczniki (badge) ---------- */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 9px;
+  border-radius: var(--radius-pill);
+  font-size: 0.72rem;
+  font-weight: 620;
+  letter-spacing: -0.005em;
+  white-space: nowrap;
+}
+
+.badge--neutral {
+  background: var(--surface-2);
+  color: var(--text-muted);
+}
+
+.badge--accent {
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+}
+
+.badge--success {
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+}
+
+.badge--soon {
+  background: var(--info-soft);
+  color: var(--info);
+}
+
+.badge--muted {
+  background: transparent;
+  border: 1px dashed var(--border-strong);
+  color: var(--text-faint);
+}
+
+.badge--lock {
+  background: var(--surface-2);
+  color: var(--text-faint);
+}
+
+/* ---------- Treść lekcji (prose) ---------- */
+
+.prose-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.prose {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  font-size: 1rem;
+  line-height: 1.65;
+  color: var(--text);
+}
+
+.prose > p {
+  color: var(--text-muted);
+}
+
+.prose strong {
+  color: var(--text);
+  font-weight: 620;
+}
+
+.prose-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin: 0;
+  padding-left: 1.2rem;
+  color: var(--text-muted);
+}
+
+.prose-list li::marker {
+  color: var(--accent);
+}
+
+.prose-block {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-m);
+  font-size: 0.94rem;
+}
+
+.prose-block__head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: 0.78rem;
+  font-weight: 640;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.prose-block__text {
+  color: var(--text);
+  line-height: 1.55;
+}
+
+.prose-block--tip {
+  background: var(--accent-soft);
+}
+
+.prose-block--tip .prose-block__head {
+  color: var(--accent-strong);
+}
+
+.prose-block--note {
+  background: var(--info-soft);
+}
+
+.prose-block--note .prose-block__head {
+  color: var(--info);
+}
+
+.prose-block--try {
+  background: var(--warn-soft);
+}
+
+.prose-block--try .prose-block__head {
+  color: var(--warn);
+}
+
+/* ---------- Zapowiedź treści (placeholder modułu/lekcji) ---------- */
+
+.coming-soon {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  background: var(--surface-2);
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-m);
+  color: var(--text-muted);
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+
+.coming-soon .icon {
+  margin-top: 2px;
+  color: var(--text-faint);
+}
+
+/* ---------- Locki wizualne (krok 2: nic nie blokują) ---------- */
+
+.is-locked {
+  opacity: 0.88;
+}
+
+.card.is-locked .module-card__num,
+.module-card.is-locked .module-card__num {
+  background: var(--surface-2);
+  color: var(--text-faint);
+}
+
+/* ---------- Pigułka wiedzy ---------- */
+
+.pill {
+  display: flex;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  background: var(--accent-soft);
+  border-radius: var(--radius-m);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--text);
+}
+
+.pill .icon {
+  margin-top: 2px;
+  color: var(--accent);
+}
+
+/* ---------- Ustawienia: wiersz i grupa opcji ---------- */
+
+.setting-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+.setting-row__text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.setting-row__label {
+  font-weight: 570;
+}
+
+.setting-row__hint {
+  color: var(--text-muted);
+  font-size: 0.84rem;
+}
+
+.option-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.option {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: var(--space-3) var(--space-4);
+  text-align: left;
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-s);
+  transition: border-color var(--transition), background-color var(--transition);
+}
+
+.option.is-selected {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.option__label {
+  font-weight: 580;
+}
+
+.option__hint {
+  color: var(--text-muted);
+  font-size: 0.83rem;
+}
+
+/* ---------- Pole tekstowe ---------- */
+
+.input {
+  width: 100%;
+  min-width: 0;
+  padding: var(--space-2) var(--space-3);
+  background: var(--surface-2);
+  border: 1.5px solid transparent;
+  border-radius: var(--radius-xs);
+  text-align: right;
+  transition: border-color var(--transition), background-color var(--transition);
+}
+
+.input:focus {
+  outline: none;
+  background: var(--surface);
+  border-color: var(--accent);
+}
+
+.input::placeholder {
+  color: var(--text-faint);
+}
+
+/* Pola w wierszach ustawień nie powinny rozciągać całej kolumny. */
+.setting-row__control {
+  flex: 0 1 190px;
+}
+
+/* ---------- Stany: ładowanie / pusto / błąd ---------- */
+
+.state {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.state--compact {
+  gap: var(--space-2);
+  padding: var(--space-4);
+  background: var(--surface-2);
+  border-radius: var(--radius-m);
+}
+
+.state--empty,
+.state--error {
+  align-items: center;
+  text-align: center;
+  padding: var(--space-6) var(--space-4);
+}
+
+.state__icon {
+  display: grid;
+  place-items: center;
+  width: 54px;
+  height: 54px;
+  border-radius: var(--radius-pill);
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.state--compact .state__icon {
+  width: 40px;
+  height: 40px;
+}
+
+.state--error .state__icon {
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+
+.state__title {
+  font-size: 1.15rem;
+}
+
+.state--compact .state__title {
+  font-size: 1rem;
+}
+
+.state__text {
+  color: var(--text-muted);
+  font-size: 0.92rem;
+  max-width: 34ch;
+}
+
+.state--error .state__text {
+  max-width: 38ch;
+}
+
+.state__detail {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.75rem;
+  color: var(--text-faint);
+  word-break: break-word;
+}
+
+.state--empty .btn,
+.state--error .btn {
+  margin-top: var(--space-1);
+}
+
+.state--loading-list {
+  gap: var(--space-2);
+}
+
+/* ---------- Szkielet ładowania ---------- */
+
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background: var(--skeleton-a);
+  border-radius: var(--radius-s);
+}
+
+.skeleton::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, var(--skeleton-b), transparent);
+  animation: shimmer 1.4s infinite;
+}
+
+@keyframes shimmer {
+  to {
+    transform: translateX(100%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton::after {
+    animation: none;
+  }
+}
+
+.skeleton--title {
+  height: 34px;
+  width: 62%;
+  margin-bottom: var(--space-4);
+  border-radius: var(--radius-xs);
+}
+
+.skeleton--card {
+  height: 116px;
+  margin-bottom: var(--space-3);
+  border-radius: var(--radius-m);
+}
+
+.skeleton--card.skeleton--sm {
+  height: 68px;
+  margin-bottom: 0;
+}
+
+.skeleton--line {
+  height: 13px;
+  margin-bottom: var(--space-3);
+}
+
+.skeleton--w70 {
+  width: 70%;
+}
+
+.skeleton--w85 {
+  width: 85%;
+}
+
+/* ---------- Notka placeholder ---------- */
+
+.placeholder-note {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  background: var(--surface-2);
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-s);
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.placeholder-note .icon {
+  margin-top: 1px;
+  color: var(--text-faint);
+}
+
+/* ---------- Powiadomienie (notice) ---------- */
+
+.notice {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  border-radius: var(--radius-s);
+  font-size: 0.86rem;
+}
+
+.notice--info {
+  background: var(--info-soft);
+  color: var(--info);
+}
+
+.notice--warn {
+  background: var(--warn-soft);
+  color: var(--warn);
+}

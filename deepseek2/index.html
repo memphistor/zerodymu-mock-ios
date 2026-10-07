@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="pl" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>ZeroDymu</title>
+  <meta name="description" content="ZeroDymu — spokojny kurs i panel wspierający życie bez dymu. Prototyp (krok 1).">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#f6f5f1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="ZeroDymu">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <link rel="icon" href="./assets/icon.svg" type="image/svg+xml">
+
+  <!-- Motyw ustawiany przed pierwszym renderem, żeby nie było mignięcia.
+       Klucz localStorage MUSI się zgadzać z js/model.js (STORAGE_KEY). -->
+  <script>
+    (function () {
+      try {
+        var pref = 'system';
+        var raw = localStorage.getItem('zerodymu:deepseek2:data');
+        if (raw) {
+          var parsed = JSON.parse(raw);
+          if (parsed && parsed.settings && parsed.settings.theme) pref = parsed.settings.theme;
+        }
+        var dark = pref === 'dark' ||
+          (pref !== 'light' && window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches);
+        document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+        if (dark) document.querySelector('meta[name="theme-color"]').content = '#0d1312';
+      } catch (e) {
+        /* brak localStorage albo uszkodzone dane — zostaje motyw domyślny */
+      }
+    })();
+  </script>
+
+  <link rel="stylesheet" href="./css/tokens.css">
+  <link rel="stylesheet" href="./css/base.css">
+  <link rel="stylesheet" href="./css/components.css">
+  <link rel="stylesheet" href="./css/screens.css">
+</head>
+<body>
+  <a class="skip-link" href="#view">Przejdź do treści</a>
+
+  <div class="app">
+    <div class="banner" id="banner" role="status" hidden></div>
+
+    <main class="view" id="view" tabindex="-1">
+      <div class="state state--loading" role="status" aria-live="polite">
+        <span class="sr-only">Ładowanie aplikacji…</span>
+        <div class="skeleton skeleton--title"></div>
+        <div class="skeleton skeleton--card"></div>
+        <div class="skeleton skeleton--card"></div>
+      </div>
+      <noscript>
+        <div class="state state--error">
+          <h1 class="state__title">Potrzebny jest JavaScript</h1>
+          <p class="state__text">ZeroDymu działa w przeglądarce i wymaga włączonego JavaScriptu.</p>
+        </div>
+      </noscript>
+    </main>
+
+    <nav class="tabbar" aria-label="Główna nawigacja">
+      <div class="tabbar__inner">
+        <a class="tab" href="#/kurs" data-tab="kurs">
+          <span class="tab__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H11v16H5.5A1.5 1.5 0 0 1 4 18.5z"/><path d="M20 5.5A1.5 1.5 0 0 0 18.5 4H13v16h5.5A1.5 1.5 0 0 0 20 18.5z"/></svg>
+          </span>
+          <span class="tab__label">Kurs</span>
+        </a>
+        <a class="tab" href="#/panel" data-tab="panel">
+          <span class="tab__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="7" height="7.5" rx="2"/><rect x="13.5" y="3.5" width="7" height="4.5" rx="2"/><rect x="13.5" y="11.5" width="7" height="9" rx="2"/><rect x="3.5" y="14.5" width="7" height="6" rx="2"/></svg>
+          </span>
+          <span class="tab__label">Panel</span>
+        </a>
+        <a class="tab" href="#/ustawienia" data-tab="ustawienia">
+          <span class="tab__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h6M14 7h6M4 17h3M11 17h9"/><circle cx="12" cy="7" r="2"/><circle cx="9" cy="17" r="2"/></svg>
+          </span>
+          <span class="tab__label">Ustawienia</span>
+        </a>
+      </div>
+    </nav>
+  </div>
+
+  <script type="module" src="./js/main.js"></script>
+</body>
+</html>

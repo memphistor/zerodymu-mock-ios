@@ -1,0 +1,118 @@
+/* Tokeny projektowe — spokojna paleta: ciepła biel + szałwiowa zieleń.
+   Motyw ustawia js/theme.js (albo inline script w index.html) przez
+   <html data-theme="light|dark">. Zmiana motywu to tylko podmiana tych zmiennych. */
+
+:root {
+  color-scheme: light;
+
+  --font: ui-rounded, "SF Pro Rounded", "Segoe UI Variable", -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, "Helvetica Neue", system-ui, sans-serif;
+  --font-num: ui-rounded, "SF Pro Rounded", system-ui, sans-serif;
+
+  /* Powierzchnie */
+  --bg: #f6f5f1;
+  --bg-tint: #eef2ee;
+  --surface: #ffffff;
+  --surface-2: #efeee8;
+  --surface-glass: rgba(255, 255, 255, 0.86);
+  --border: #e4e2d9;
+  --border-strong: #d5d3c8;
+
+  /* Tekst */
+  --text: #1b2422;
+  --text-muted: #5c6864;
+  --text-faint: #8b968f;
+
+  /* Akcent (szałwia) */
+  --accent: #2f7f6d;
+  --accent-strong: #256455;
+  --accent-contrast: #ffffff;
+  --accent-soft: #dcefe8;
+  --accent-soft-strong: #c6e5da;
+
+  /* Znaczenia */
+  --danger: #a63d33;
+  --danger-soft: #f9e6e2;
+  --warn: #8a6a2f;
+  --warn-soft: #f6efdc;
+  --info: #38607f;
+  --info-soft: #e3edf5;
+  --success: #2f7f6d;
+
+  --focus: #2f7f6d;
+  --skeleton-a: #e5e3d9;
+  --skeleton-b: #efeee7;
+
+  --shadow-s: 0 1px 2px rgba(27, 36, 34, 0.05);
+  --shadow-m: 0 1px 2px rgba(27, 36, 34, 0.05), 0 8px 22px rgba(27, 36, 34, 0.06);
+  --shadow-l: 0 2px 6px rgba(27, 36, 34, 0.07), 0 18px 44px rgba(27, 36, 34, 0.10);
+
+  /* Kształty */
+  --radius-xs: 10px;
+  --radius-s: 14px;
+  --radius-m: 20px;
+  --radius-l: 28px;
+  --radius-pill: 999px;
+
+  /* Odstępy */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+
+  /* Układ */
+  --page-max: 620px;
+  --page-pad: 1.125rem;
+  --tabbar-h: 62px;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+
+  --transition: 180ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  --bg: #0d1312;
+  --bg-tint: #111a18;
+  --surface: #16201e;
+  --surface-2: #1d2926;
+  --surface-glass: rgba(22, 32, 30, 0.86);
+  --border: #27332f;
+  --border-strong: #354440;
+
+  --text: #e8efec;
+  --text-muted: #a0b0aa;
+  --text-faint: #74847e;
+
+  --accent: #5cc2ab;
+  --accent-strong: #86d8c4;
+  --accent-contrast: #062019;
+  --accent-soft: #17332c;
+  --accent-soft-strong: #1d433a;
+
+  --danger: #f0958b;
+  --danger-soft: #37201d;
+  --warn: #e0bd7d;
+  --warn-soft: #33291a;
+  --info: #9dc0da;
+  --info-soft: #1b2730;
+  --success: #5cc2ab;
+
+  --focus: #86d8c4;
+  --skeleton-a: #1d2926;
+  --skeleton-b: #24322e;
+
+  --shadow-s: 0 1px 2px rgba(0, 0, 0, 0.35);
+  --shadow-m: 0 1px 2px rgba(0, 0, 0, 0.35), 0 10px 26px rgba(0, 0, 0, 0.32);
+  --shadow-l: 0 2px 8px rgba(0, 0, 0, 0.4), 0 20px 48px rgba(0, 0, 0, 0.42);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --transition: 0ms;
+  }
+}
