@@ -1,0 +1,80 @@
+/** Małe, powtarzalne elementy UI współdzielone między ekranami. */
+
+import { h } from '../dom.js';
+import { icon } from './icons.js';
+
+/** Korzeń ekranu: pionowy stos z równymi odstępami. */
+export function screen(...children) {
+  return h('div', { class: 'stack' }, children);
+}
+
+export function screenHead({ eyebrow, title, lead }) {
+  return h('header', { class: 'screen-head' },
+    eyebrow && h('p', { class: 'eyebrow' }, eyebrow),
+    h('h1', { class: 'screen-title', tabindex: '-1' }, title),
+    lead && h('p', { class: 'screen-lead' }, lead));
+}
+
+export function backLink(href, label) {
+  return h('a', { class: 'back-link', href }, icon('chevronLeft', 20), label);
+}
+
+export function progressBar(percent, label) {
+  const value = Math.max(0, Math.min(100, percent));
+  const bar = h('span', { class: 'progress__bar' });
+  bar.style.width = `${value}%`;
+  return h('div', {
+    class: 'progress',
+    role: 'progressbar',
+    'aria-label': label,
+    'aria-valuemin': '0',
+    'aria-valuemax': '100',
+    'aria-valuenow': String(value),
+  }, bar);
+}
+
+export function badge(text, { accent = false } = {}) {
+  return h('span', { class: `badge${accent ? ' badge--accent' : ''}` }, text);
+}
+
+/** Wiersz listy: status (kółko) + tytuł/meta + opcjonalny chevron. */
+export function listRow({ href, title, meta, iconName, done = false }) {
+  const content = [
+    h('span', { class: `row__status${done ? ' is-done' : ''}`, 'aria-hidden': 'true' },
+      icon(done ? 'check' : iconName, 18)),
+    h('span', { class: 'row__body' },
+      h('span', { class: 'row__title' }, title),
+      meta && h('span', { class: 'row__meta' }, meta)),
+    h('span', { class: 'row__chevron' }, icon('chevronRight', 20)),
+  ];
+  return h('a', { class: 'row', href }, content);
+}
+
+/** Linie zastępcze dla treści, której jeszcze nie ma. */
+const LINE_WIDTHS = {
+  title: ['ph-line--title'],
+  paragraph: ['ph-line--90', '', 'ph-line--75', 'ph-line--50'],
+  short: ['ph-line--90', 'ph-line--50'],
+};
+
+export function placeholderLines(variant = 'paragraph') {
+  return h('div', { class: 'ph-lines', 'aria-hidden': 'true' },
+    LINE_WIDTHS[variant].map((width) => h('div', { class: `ph-line ${width}`.trim() })));
+}
+
+export function formatDate(iso) {
+  try {
+    return new Intl.DateTimeFormat('pl-PL', { day: 'numeric', month: 'long', year: 'numeric' })
+      .format(new Date(iso));
+  } catch {
+    return iso;
+  }
+}
+
+export function plural(n, one, few, many) {
+  const mod10 = n % 10;
+  const mod100 = n % 100;
+  if (n === 1) return one;
+  if (mod10 >= 2 && mod10 <= 4 && !(mod100 >= 12 && mod100 <= 14)) return few;
+  return many;
+}
