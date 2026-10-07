@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="pl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#f6f4ef" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <title>ZeroDymu</title>
+    <script>
+      try {
+        var raw = localStorage.getItem("zerodymu-grok-v1");
+        var theme = raw ? JSON.parse(raw).settings.theme : "system";
+        if (theme === "light" || theme === "dark") {
+          document.documentElement.dataset.theme = theme;
+        }
+      } catch (err) {}
+    </script>
+    <link rel="stylesheet" href="./css/app.css" />
+  </head>
+  <body>
+    <div id="app" class="app">
+      <section class="state" aria-live="polite">
+        <p class="state-kicker">ZeroDymu</p>
+        <h1>Wczytuję kurs</h1>
+        <p>Chwila.</p>
+        <div class="loading-bar" aria-hidden="true"></div>
+      </section>
+    </div>
+    <script type="module" src="./js/main.js"></script>
+  </body>
+</html>
