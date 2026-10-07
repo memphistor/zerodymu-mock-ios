@@ -31,21 +31,21 @@ Wejście w lekcję zapisuje ją jako otwartą. Reset w Ustawieniach wraca do pus
 
 **Repo:** [memphistor/zerodymu-mock-ios](https://github.com/memphistor/zerodymu-mock-ios)
 
-Strategia ustalona przy pierwszym deployu (Sonnet) — bez zmiany:
-
 | Element | Wartość |
 |--------|---------|
 | Branch | `main` |
 | Źródło Pages | Settings → Pages → **Deploy from a branch** → `main` → folder **`/ (root)`** |
-| Workflow Actions | Brak. Statyczny HTML, bez bundlera — osobny workflow nic nie buduje. |
-| Warianty | Podkatalogi `composer/`, `sonnet/`, `grok/` |
-| Wariant Grok | Katalog **`grok/`** |
-| Jekyll | `.nojekyll` w `grok/` oraz w korzeniu repo Pages |
-| Wejście z głównego URL | `index.html` w korzeniu dalej otwiera `sonnet/` |
+| Workflow Actions | Brak. Statyczny HTML, bez bundlera. |
+| Korzeń | Stara wersja (mock Composer) serwowana wprost. **Bez przekierowania.** |
+| Ten prototyp | Katalog **`sonnet/`** |
+| Jekyll | `.nojekyll` w korzeniu i w `sonnet/` |
 
-**Link live (Grok):**  
-https://memphistor.github.io/zerodymu-mock-ios/grok/
+**Stara wersja:**  
+https://memphistor.github.io/zerodymu-mock-ios/
 
-**Sync po zmianach w `Grok/`:** skopiuj zawartość tego folderu do `grok/` w repo Pages, commit + push na `main`. Pages odświeża się zwykle w 1–2 minuty.
+**Ten prototyp:**  
+https://memphistor.github.io/zerodymu-mock-ios/sonnet/
 
-Ścieżki assetów są względne (`./css/...`, `./js/...`), żeby działały pod podkatalogiem `/grok/`.
+**Sync po zmianach w `Grok/`:** skopiuj zawartość tego folderu do `sonnet/` w repo Pages, commit + push na `main`. Pages odświeża się zwykle w 1–2 minuty.
+
+Ścieżki assetów są względne (`./css/...`, `./js/...`), żeby działały pod `/sonnet/`.

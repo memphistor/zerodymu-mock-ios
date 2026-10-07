@@ -8,22 +8,18 @@ Hosting statycznych mocków ZeroDymu na **GitHub Pages**.
 |------------|---------|
 | Branch | `main` |
 | Folder | `/ (root)` |
-| URL | https://memphistor.github.io/zerodymu-mock-ios/ |
+| Przekierowanie | Brak |
 
-Korzeń (`index.html`) przekierowuje do aktywnego wariantu **Sonnet**.
+| Adres | Co widać |
+|--------|----------|
+| https://memphistor.github.io/zerodymu-mock-ios/ | Stara wersja (mock Composer), serwowana wprost z korzenia |
+| https://memphistor.github.io/zerodymu-mock-ios/sonnet/ | Bieżący prototyp z folderu `Grok/` w repo Testy |
+| https://memphistor.github.io/zerodymu-mock-ios/composer/ | Ta sama stara wersja, kopia w podkatalogu |
+| https://memphistor.github.io/zerodymu-mock-ios/grok/ | Ta sama treść co `sonnet/` |
 
-## Warianty
-
-| Folder | Opis | URL |
-|--------|------|-----|
-| `sonnet/` | Prototyp z repo Testy (`Sonnet/`) | [/sonnet/](https://memphistor.github.io/zerodymu-mock-ios/sonnet/) |
-| `grok/` | Prototyp z repo Testy (`Grok/`) | [/grok/](https://memphistor.github.io/zerodymu-mock-ios/grok/) |
-| `composer/` | Wcześniejszy mock (archiwum w repo) | [/composer/](https://memphistor.github.io/zerodymu-mock-ios/composer/) |
-
-Pliki `.nojekyll` wyłączają Jekyll.
+Źródło: Settings → Pages → **Deploy from a branch** → `main` → `/ (root)`. Bez workflow Actions. Pliki `.nojekyll` wyłączają Jekyll.
 
 ## Deploy
 
-Po zmianach w lokalnym folderze `Sonnet/` albo `Grok/` (repo Testy): skopiuj zawartość do `sonnet/` albo `grok/` tutaj, commit + push na `main`. Pages odświeża się zwykle w 1–2 minuty. Bez workflow Actions — źródłem jest branch `main`, folder `/ (root)`.
-
-Szczegóły uruchomienia lokalnego: `sonnet/README.md`, `grok/README.md`.
+- Stara wersja w korzeniu to kopia `composer/` (`index.html`, `css/`, `js/`).
+- Po zmianach w `Grok/` (repo Testy) skopiuj ten folder do `sonnet/` (i `grok/`), commit + push na `main`.

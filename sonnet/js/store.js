@@ -1,102 +1,87 @@
-const STORAGE_KEY = "zerodymu-sonnet-v1";
+export const STORAGE_KEY = "zerodymu-grok-v1";
 
-const defaultState = () => ({
-  version: 2,
-  settings: {
-    theme: "system",
-    onboardingDone: false,
-  },
-  progress: {
-    startedAt: null,
-    modules: {},
-    lessons: {},
-    quizzes: {},
-    examPassed: false,
-  },
-  panel: {
-    cigarettesToday: 0,
-    streakDays: 0,
-    habits: [],
-    healthNotes: "",
-    savingsPlaceholder: 0,
-  },
-});
+const THEMES = new Set(["light", "dark", "system"]);
 
-function loadRaw() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return null;
-    return JSON.parse(raw);
-  } catch {
-    return null;
-  }
-}
-
-function mergeState(parsed) {
-  const base = defaultState();
-  if (!parsed || typeof parsed !== "object") return base;
+export function defaultState() {
   return {
-    ...base,
-    ...parsed,
-    settings: { ...base.settings, ...parsed.settings },
-    progress: { ...base.progress, ...parsed.progress },
-    panel: { ...base.panel, ...parsed.panel },
+    version: 1,
+    settings: {
+      theme: "system",
+    },
+    progress: {
+      updatedAt: null,
+      lessons: {},
+    },
+    panel: {
+      habits: [],
+      streakDays: null,
+      cigarettesAvoided: null,
+      savedPln: null,
+    },
   };
 }
 
-let state = mergeState(loadRaw());
-const listeners = new Set();
-
-export function getState() {
-  return state;
-}
-
-export function subscribe(fn) {
-  listeners.add(fn);
-  return () => listeners.delete(fn);
-}
-
-function persist() {
+export function loadState() {
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) {
+      const fresh = defaultState();
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(fresh));
+      return { state: fresh, loadError: false };
+    }
+    const parsed = JSON.parse(raw);
+    return { state: normalize(parsed), loadError: false };
   } catch {
-    /* quota / private mode */
+    return { state: null, loadError: true };
   }
-  listeners.forEach((fn) => fn(state));
 }
 
-export function patch(partial) {
-  state = mergeState({ ...state, ...partial });
-  persist();
+export function saveState(state) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
 }
 
-export function updateSettings(settingsPatch) {
-  state = mergeState({
-    ...state,
-    settings: { ...state.settings, ...settingsPatch },
-  });
-  persist();
+export function resetState() {
+  const fresh = defaultState();
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(fresh));
+  return fresh;
 }
 
-export function updatePanel(panelPatch) {
-  state = mergeState({
-    ...state,
-    panel: { ...state.panel, ...panelPatch },
-  });
-  persist();
-}
-
-export function resetDemo() {
-  state = defaultState();
-  persist();
-}
-
-export function ensureStarted() {
-  if (!state.progress.startedAt) {
-    state = mergeState({
-      ...state,
-      progress: { ...state.progress, startedAt: new Date().toISOString() },
-    });
-    persist();
+function normalize(parsed) {
+  const base = defaultState();
+  if (!parsed || typeof parsed !== "object" || parsed.version !== 1) {
+    return base;
   }
+
+  const theme = parsed.settings && parsed.settings.theme;
+  base.settings.theme = THEMES.has(theme) ? theme : "system";
+
+  const lessons = parsed.progress && parsed.progress.lessons;
+  if (lessons && typeof lessons === "object" && !Array.isArray(lessons)) {
+    for (const [key, value] of Object.entries(lessons)) {
+      if (!value || typeof value !== "object") continue;
+      const openedAt = typeof value.openedAt === "string" ? value.openedAt : null;
+      if (openedAt) base.progress.lessons[key] = { openedAt };
+    }
+  }
+  if (parsed.progress && typeof parsed.progress.updatedAt === "string") {
+    base.progress.updatedAt = parsed.progress.updatedAt;
+  }
+
+  const panel = parsed.panel;
+  if (panel && typeof panel === "object") {
+    base.panel.habits = Array.isArray(panel.habits) ? panel.habits.filter(isHabit) : [];
+    base.panel.streakDays = numberOrNull(panel.streakDays);
+    base.panel.cigarettesAvoided = numberOrNull(panel.cigarettesAvoided);
+    base.panel.savedPln = numberOrNull(panel.savedPln);
+  }
+
+  return base;
+}
+
+function isHabit(item) {
+  return Boolean(item && typeof item === "object" && typeof item.id === "string");
+}
+
+function numberOrNull(value) {
+  return typeof value === "number" && Number.isFinite(value) ? value : null;
 }
