@@ -1,0 +1,152 @@
+/* ZeroDymu / deepseek — tokeny motywu.
+   Jasny motyw to wartość domyślna; ciemny nadpisuje te same zmienne.
+   Motyw "systemowy" idzie za prefers-color-scheme. */
+
+:root {
+  color-scheme: light;
+
+  /* Powierzchnie */
+  --bg: #f6f6f4;
+  --surface: #ffffff;
+  --surface-2: #f0f1ee;
+  --surface-3: #e8eae5;
+  --border: rgba(22, 27, 24, 0.09);
+  --border-strong: rgba(22, 27, 24, 0.18);
+
+  /* Tekst */
+  --text: #171b19;
+  --text-muted: #656e69;
+  --text-faint: #949c97;
+  --text-on-accent: #ffffff;
+
+  /* Akcent */
+  --accent: #3d6b55;
+  --accent-hover: #33593f;
+  --accent-soft: rgba(61, 107, 85, 0.1);
+  --accent-ring: rgba(61, 107, 85, 0.32);
+
+  /* Statusy */
+  --ok: #3d7a59;
+  --ok-soft: rgba(61, 122, 89, 0.12);
+  --warn: #9a6b31;
+  --warn-soft: rgba(154, 107, 49, 0.12);
+  --danger: #ad4b3a;
+  --danger-soft: rgba(173, 75, 58, 0.12);
+
+  /* Cienie */
+  --shadow-sm: 0 1px 2px rgba(16, 20, 18, 0.05);
+  --shadow-md: 0 6px 20px rgba(16, 20, 18, 0.07);
+  --shadow-lg: 0 14px 40px rgba(16, 20, 18, 0.1);
+
+  /* Kształty */
+  --radius-xs: 8px;
+  --radius-sm: 12px;
+  --radius-md: 18px;
+  --radius-lg: 24px;
+  --radius-pill: 999px;
+
+  /* Odstępy */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 20px;
+  --sp-6: 24px;
+  --sp-7: 32px;
+  --sp-8: 40px;
+
+  /* Typografia */
+  --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  --fs-xs: 0.75rem;
+  --fs-sm: 0.8125rem;
+  --fs-md: 0.9375rem;
+  --fs-lg: 1.0625rem;
+  --fs-xl: 1.3125rem;
+  --fs-2xl: 1.625rem;
+  --lh-tight: 1.25;
+  --lh-body: 1.55;
+
+  /* Ruch */
+  --dur: 200ms;
+  --dur-slow: 320ms;
+  --ease: cubic-bezier(0.2, 0.7, 0.3, 1);
+
+  /* Układ */
+  --bar-h: 52px;
+  --tabbar-h: 60px;
+  --page-max: 640px;
+}
+
+html[data-theme="dark"] {
+  color-scheme: dark;
+
+  --bg: #0f1211;
+  --surface: #181c1a;
+  --surface-2: #1f2421;
+  --surface-3: #272d29;
+  --border: rgba(233, 238, 235, 0.1);
+  --border-strong: rgba(233, 238, 235, 0.2);
+
+  --text: #eaeeec;
+  --text-muted: #9ba49f;
+  --text-faint: #767f7a;
+  --text-on-accent: #0c1a12;
+
+  --accent: #82b79c;
+  --accent-hover: #96c6ad;
+  --accent-soft: rgba(130, 183, 156, 0.14);
+  --accent-ring: rgba(130, 183, 156, 0.38);
+
+  --ok: #82b79c;
+  --ok-soft: rgba(130, 183, 156, 0.14);
+  --warn: #d0a469;
+  --warn-soft: rgba(208, 164, 105, 0.14);
+  --danger: #dd8b79;
+  --danger-soft: rgba(221, 139, 121, 0.14);
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 6px 20px rgba(0, 0, 0, 0.35);
+  --shadow-lg: 0 14px 40px rgba(0, 0, 0, 0.45);
+}
+
+@media (prefers-color-scheme: dark) {
+  html[data-theme="system"] {
+    color-scheme: dark;
+
+    --bg: #0f1211;
+    --surface: #181c1a;
+    --surface-2: #1f2421;
+    --surface-3: #272d29;
+    --border: rgba(233, 238, 235, 0.1);
+    --border-strong: rgba(233, 238, 235, 0.2);
+
+    --text: #eaeeec;
+    --text-muted: #9ba49f;
+    --text-faint: #767f7a;
+    --text-on-accent: #0c1a12;
+
+    --accent: #82b79c;
+    --accent-hover: #96c6ad;
+    --accent-soft: rgba(130, 183, 156, 0.14);
+    --accent-ring: rgba(130, 183, 156, 0.38);
+
+    --ok: #82b79c;
+    --ok-soft: rgba(130, 183, 156, 0.14);
+    --warn: #d0a469;
+    --warn-soft: rgba(208, 164, 105, 0.14);
+    --danger: #dd8b79;
+    --danger-soft: rgba(221, 139, 121, 0.14);
+
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+    --shadow-md: 0 6px 20px rgba(0, 0, 0, 0.35);
+    --shadow-lg: 0 14px 40px rgba(0, 0, 0, 0.45);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur: 1ms;
+    --dur-slow: 1ms;
+  }
+}
