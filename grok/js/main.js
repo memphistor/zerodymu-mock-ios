@@ -1,7 +1,7 @@
-import { MODULES, findLesson, findModule, moduleIndex } from "./catalog.js";
-import { EXAM, lessonQuiz, moduleQuiz, passMark } from "./quizzes.js";
-import { loadState, resetState, saveState } from "./store.js";
-import { backLink, emptyView, errorView, escapeHtml, shell } from "./ui.js";
+import { MODULES, findLesson, findModule, moduleIndex } from "./catalog.js?v=2";
+import { EXAM, lessonQuiz, moduleQuiz, passMark } from "./quizzes.js?v=2";
+import { loadState, resetState, saveState } from "./store.js?v=2";
+import { backLink, emptyView, errorView, escapeHtml, shell } from "./ui.js?v=2";
 
 const app = document.querySelector("#app");
 const themeMeta = document.querySelector('meta[name="theme-color"]');
