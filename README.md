@@ -1,25 +1,12 @@
 # zerodymu-mock-ios
 
-Hosting statycznych mocków ZeroDymu na **GitHub Pages**.
+GitHub Pages: branch `main`, folder root. **Bez przekierowania** z korzenia.
 
-## GitHub Pages
+| URL | Wersja | Sync z Testy |
+|-----|--------|----------------|
+| https://memphistor.github.io/zerodymu-mock-ios/ | Composer **v1** | `Composer/` → korzeń |
+| https://memphistor.github.io/zerodymu-mock-ios/composer2/ | Composer **v2** | `Composer v2/` → `composer2/` |
+| https://memphistor.github.io/zerodymu-mock-ios/grok/ | Grok | `Grok/` → `grok/` |
+| https://memphistor.github.io/zerodymu-mock-ios/composer/ | Kopia v1 | `Composer/` → `composer/` |
 
-| Ustawienie | Wartość |
-|------------|---------|
-| Branch | `main` |
-| Folder | `/ (root)` |
-| Przekierowanie | Brak |
-
-| Adres | Co widać |
-|--------|----------|
-| https://memphistor.github.io/zerodymu-mock-ios/ | Stara wersja (mock Composer), serwowana wprost z korzenia |
-| https://memphistor.github.io/zerodymu-mock-ios/grok/ | Bieżący prototyp z folderu `Grok/` w repo Testy |
-| https://memphistor.github.io/zerodymu-mock-ios/composer/ | Ta sama stara wersja, kopia w podkatalogu |
-| https://memphistor.github.io/zerodymu-mock-ios/sonnet/ | Kopia tego samego prototypu |
-
-Źródło: Settings → Pages → **Deploy from a branch** → `main` → `/ (root)`. Bez workflow Actions. Pliki `.nojekyll` wyłączają Jekyll.
-
-## Deploy
-
-- Stara wersja w korzeniu to kopia `composer/` (`index.html`, `css/`, `js/`).
-- Po zmianach w `Grok/` (repo Testy) skopiuj ten folder do `grok/`, commit + push na `main`.
+`.nojekyll` w korzeniu i w podkatalogach wariantów.
