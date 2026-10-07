@@ -13,19 +13,24 @@ Statyczny mock kursu ZeroDymu (mobile-first, UI po polsku). Kod tylko w tym fold
 
 ## Zakładki
 
-- **Kurs** — 6 modułów (placeholdery), ekrany modułu / lekcji / quizu (sam układ)
-- **Panel** — szkic liczb (puste wartości) i pusty stan nawyków
-- **Ustawienia** — motyw jasny / ciemny / systemowy, reset danych, podgląd błędu odczytu
+- **Kurs** — 6 modułów (Kaizen, Ikigai, rzucanie palenia małymi krokami). Moduł 1 ma cztery bogatsze lekcje, moduły 2–6 po trzy krótsze, kompletne. Na liście widać status i pasek postępu.
+- **Lekcja** — spis treści, pigułka, sekcje, wejście w quiz.
+- **Quiz lekcji** — 3 pytania A–D i wyjaśnienie. **Quiz modułu** — 5 pytań. **Egzamin** — 10 pytań, z listy kursu.
+- **Panel** — szkic liczb i pusty stan nawyków; widać liczbę zaliczonych lekcji.
+- **Ustawienia** — motyw jasny / ciemny / systemowy, reset danych.
+
+Krok 2 — treść. Locki są wizualne (kłódka „Podgląd blokady” na liście, gdy poprzedni quiz nie jest zaliczony). Wejście zostaje otwarte. Pełna logika blokad w kroku 3.
+
+Próg zaliczenia: lekcja 2/3, moduł 4/5, egzamin 7/10. Wynik zapisuje się lokalnie i gasi kłódkę następnego elementu.
 
 Dane: `localStorage` pod kluczem `zerodymu-grok-v1`.
 
-Szkic modelu:
-
 - `settings.theme` — `light` | `dark` | `system`
-- `progress.lessons` — mapa `modul/lekcja` → `{ openedAt }`
+- `progress.lessons` — `modul/lekcja` → `{ openedAt }`
+- `progress.quizzes` — `lekcja:…`, `modul:…`, `egzamin` → `{ correct, total, passed, at }`
 - `panel` — `habits` (pusta lista), `streakDays`, `cigarettesAvoided`, `savedPln` (na razie `null`)
 
-Wejście w lekcję zapisuje ją jako otwartą. Reset w Ustawieniach wraca do pustego szkicu.
+Reset w Ustawieniach wraca do pustego szkicu.
 
 ## Publikacja (GitHub Pages)
 

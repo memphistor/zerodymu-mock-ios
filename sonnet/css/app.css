@@ -402,3 +402,132 @@ a { color: inherit; }
 @media (prefers-reduced-motion: reduce) {
   .loading-bar::after { animation: none; width: 100%; }
 }
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.6rem;
+  padding: 0 8px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.chip-lock {
+  background: var(--surface-2);
+  color: var(--muted);
+}
+
+.bar {
+  height: 4px;
+  margin: 8px 0 4px;
+  border-radius: 99px;
+  background: var(--line);
+  overflow: hidden;
+}
+
+.bar > span {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+}
+
+.toc {
+  margin: 0 0 14px;
+  padding: 14px 16px;
+  border-radius: 18px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+}
+
+.toc ol {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
+}
+
+.toc button {
+  width: 100%;
+  min-height: 44px;
+  padding: 8px 0;
+  border: 0;
+  background: transparent;
+  color: var(--accent);
+  font: inherit;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+}
+
+.pill {
+  margin: 0 0 18px;
+  padding: 16px;
+  border-radius: 18px;
+  background: var(--accent-soft);
+}
+
+.pill p:last-child {
+  margin-top: 6px;
+  font-family: var(--serif);
+  font-size: 1.25rem;
+  line-height: 1.35;
+}
+
+.prose { margin: 0 0 18px; }
+.prose h2 { margin: 0 0 8px; }
+.prose p { margin: 0 0 8px; }
+.prose p:last-child { margin-bottom: 0; }
+
+.question {
+  margin: 0 0 14px;
+  font-family: var(--serif);
+  font-size: 1.35rem;
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+}
+
+.option {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.letter {
+  flex: none;
+  width: 1.4rem;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.option.good {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.option.bad {
+  border-color: var(--danger);
+}
+
+.explain {
+  margin: 0 0 14px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+}
+
+.explain p:last-child { margin-top: 6px; }
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.quiz-entry { margin-top: 4px; }
+
+.prose,
+.pill,
+.toc { scroll-margin-top: 12px; }

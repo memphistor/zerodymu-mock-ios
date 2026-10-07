@@ -11,6 +11,7 @@ export function defaultState() {
     progress: {
       updatedAt: null,
       lessons: {},
+      quizzes: {},
     },
     panel: {
       habits: [],
@@ -67,6 +68,14 @@ function normalize(parsed) {
     base.progress.updatedAt = parsed.progress.updatedAt;
   }
 
+  const quizzes = parsed.progress && parsed.progress.quizzes;
+  if (quizzes && typeof quizzes === "object" && !Array.isArray(quizzes)) {
+    for (const [key, value] of Object.entries(quizzes)) {
+      const record = readQuiz(value);
+      if (record) base.progress.quizzes[key] = record;
+    }
+  }
+
   const panel = parsed.panel;
   if (panel && typeof panel === "object") {
     base.panel.habits = Array.isArray(panel.habits) ? panel.habits.filter(isHabit) : [];
@@ -84,4 +93,17 @@ function isHabit(item) {
 
 function numberOrNull(value) {
   return typeof value === "number" && Number.isFinite(value) ? value : null;
+}
+
+function readQuiz(value) {
+  if (!value || typeof value !== "object") return null;
+  const correct = numberOrNull(value.correct);
+  const total = numberOrNull(value.total);
+  if (correct === null || total === null || total < 1 || correct < 0 || correct > total) return null;
+  return {
+    correct,
+    total,
+    passed: Boolean(value.passed),
+    at: typeof value.at === "string" ? value.at : null,
+  };
 }
