@@ -13,11 +13,15 @@ Statyczny mock kursu ZeroDymu (mobile-first, UI po polsku). Kod tylko w tym fold
 
 ## Zakładki
 
-- **Kurs** — 6 modułów (placeholdery), ekrany modułu / lekcji / quizu (layout)
+- **Kurs** — 6 modułów (Kaizen, Ikigai, małe kroki), 20 lekcji z treścią; quiz lekcyjny (3× A–D), quiz modułowy (5), egzamin (10)
 - **Panel** — szkic danych + pusty stan nawyków
 - **Ustawienia** — motyw jasny / ciemny / systemowy, reset demo
 
 Dane: `localStorage` pod kluczem `zerodymu-sonnet-v1`.
+
+### Krok 2 — treść; locki w kroku 3
+
+Moduły i lekcje mogą pokazywać **🔒 Podgląd** (wizualna informacja o kolejności). W kroku 2 **wszystko jest klikalne** — pełna logika blokowania przyjdzie w kroku 3 (`js/logic/locks.js`, tryb `visual-only`).
 
 ## Publikacja (GitHub Pages)
 

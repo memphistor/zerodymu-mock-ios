@@ -1,7 +1,7 @@
 const STORAGE_KEY = "zerodymu-sonnet-v1";
 
 const defaultState = () => ({
-  version: 1,
+  version: 2,
   settings: {
     theme: "system",
     onboardingDone: false,
@@ -11,6 +11,7 @@ const defaultState = () => ({
     modules: {},
     lessons: {},
     quizzes: {},
+    examPassed: false,
   },
   panel: {
     cigarettesToday: 0,

@@ -235,3 +235,114 @@
   border-radius: var(--radius-sm);
   padding: var(--space-2) var(--space-3);
 }
+
+.progress-bar {
+  height: 6px;
+  background: var(--bg-muted);
+  border-radius: 999px;
+  overflow: hidden;
+  margin: var(--space-3) 0 var(--space-2);
+}
+
+.progress-bar__fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 999px;
+  transition: width var(--dur) var(--ease);
+}
+
+.chip--muted {
+  background: var(--bg-muted);
+  color: var(--text-muted);
+}
+
+.chip--lock {
+  background: color-mix(in srgb, var(--danger) 12%, var(--bg-elevated));
+  color: var(--text-muted);
+}
+
+.card--locked {
+  border-style: dashed;
+}
+
+.lesson-pill {
+  margin-left: auto;
+}
+
+.lesson-toc {
+  margin: var(--space-4) 0;
+  padding: var(--space-3);
+  background: var(--bg-muted);
+  border-radius: var(--radius-sm);
+}
+
+.lesson-toc ol {
+  margin: var(--space-2) 0 0;
+  padding-left: var(--space-5);
+}
+
+.toc-link {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.lesson-section {
+  margin-bottom: var(--space-5);
+  padding-bottom: var(--space-4);
+  border-bottom: 1px solid var(--border);
+}
+
+.lesson-section:last-child {
+  border-bottom: none;
+}
+
+.lesson-section h3 {
+  margin: 0 0 var(--space-2);
+  font-size: 1rem;
+}
+
+.quiz-question {
+  margin-bottom: var(--space-4);
+}
+
+.quiz-question__prompt {
+  font-weight: 600;
+  margin: 0 0 var(--space-3);
+}
+
+.quiz-choices {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.quiz-choice {
+  display: flex;
+  gap: var(--space-3);
+  align-items: flex-start;
+  padding: var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.quiz-choice input {
+  margin-top: 3px;
+}
+
+.quiz-feedback {
+  margin-top: var(--space-3);
+  padding: var(--space-3);
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+}
+
+.quiz-feedback--ok {
+  background: var(--accent-soft);
+  color: var(--text);
+}
+
+.quiz-feedback--bad {
+  background: color-mix(in srgb, var(--danger) 15%, var(--bg-elevated));
+}

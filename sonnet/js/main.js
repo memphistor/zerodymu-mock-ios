@@ -1,7 +1,7 @@
 import { ensureStarted, subscribe } from "./store.js";
 import { initTheme } from "./theme.js";
 import { getRoute, onRouteChange, navigate, paths } from "./router.js";
-import { renderCourse, bindCourseEvents } from "./views/course.js";
+import { renderCourse, bindCourseEvents, bindCourseQuizEvents } from "./views/course.js";
 import { renderPanel } from "./views/panel.js";
 import { renderSettings, bindSettingsEvents } from "./views/settings.js";
 import { renderLoading, renderError } from "./ui/states.js";
@@ -60,7 +60,10 @@ function renderScreen(route) {
 
   root.innerHTML = html;
 
-  if (route.tab === "kurs") bindCourseEvents(root, route);
+  if (route.tab === "kurs") {
+    bindCourseEvents(root, route);
+    bindCourseQuizEvents(root, route);
+  }
   if (route.tab === "ustawienia") bindSettingsEvents(root);
 }
 
