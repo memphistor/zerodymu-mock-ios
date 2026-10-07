@@ -46,7 +46,7 @@ export default function quizView({ moduleId }) {
     return h('section', { class: 'card' },
       h('h2', { class: 'card__title', tabindex: '-1', 'data-focus': '' }, 'Sprawdź, co zostaje w głowie'),
       h('p', { class: 'screen-lead' },
-        `Quiz ma ${total} pytania. Pytania i odpowiedzi poją się razem z pełną treścią kursu.`),
+        `Quiz ma ${total} pytania. Pytania i odpowiedzi pojawią się razem z pełną treścią kursu.`),
       h('button', {
         class: 'btn btn--block', type: 'button',
         onClick: () => { step = 0; answers = []; go('question'); },
